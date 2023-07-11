@@ -20,7 +20,7 @@ export default function ContactFilter() {
         <p>the phone book is empty</p>
       ) : (
         <div>
-          <p>Please enter the name </p>
+          <p>Search contact by name</p>
           <input type="text" name="filter" onChange={handleFilterChange} />
         </div>
       )}
