@@ -2,8 +2,9 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { object, string } from 'yup';
 import css from './contactForm.module.css';
-import { useDispatch, useSelector } from 'react-redux';
-import { addContacts } from 'redux/contactSlice';
+// import { useDispatch, useSelector } from 'react-redux';
+// import { addContacts } from 'redux/contactSlice';
+import { useAddContactMutation, useGetContactsQuery } from 'redux/contactsApi';
 import Notiflix from 'notiflix';
 
 const initialValues = {
@@ -23,17 +24,25 @@ let userSchema = object().shape({
 });
 
 export default function ContactForm() {
-  const contactsRedux = useSelector(state => state.contacts);
+  // const contactsRedux = useSelector(state => state.contacts);
 
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
+
+  const [fn] = useAddContactMutation();
+  const { data: contacts } = useGetContactsQuery();
 
   const handleSubmit = ({ name, number }, action) => {
-    if (contactsRedux.find(contact => contact.name === name) !== undefined) {
+    console.log('name', name, number);
+
+    if (contacts.find(contact => contact.name === name) !== undefined) {
       Notiflix.Notify.failure(`${name} is already saved in your contacts`);
       return;
     }
 
-    dispatch(addContacts(name, number));
+    const contact = { name, phone: number };
+
+    fn(contact);
+
     Notiflix.Notify.success(
       `${name} has been successfully added to your contacts`
     );
